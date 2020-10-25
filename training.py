@@ -32,11 +32,13 @@ model = Sequential()
 
 model.add(Conv2D(32, (3, 3), activation='relu', input_shape=input_shape))
 model.add(BatchNormalization()) # Normalize data to increase efficiency
+# model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2))) # reduce size to one fourth
 model.add(Dropout(0.25)) # increase generalizability
 
 model.add(Conv2D(64, (3, 3), activation='relu', input_shape=input_shape)) # filter increases
 model.add(BatchNormalization()) # Normalize data to increase efficiency
+# model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2))) # reduce size to one fourth
 model.add(Dropout(0.25)) # increase generalizability
 
