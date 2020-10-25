@@ -6,4 +6,4 @@ In the folder, there are two .py files. The main.py opens up the camera, take a 
 
 This program is Charlie Guo, Edward Li, Tracy Lin's Hackathon project. It is aimed to help students under the Covid-19 pandemic to focus in online classes (we wish it could work:). Moreover, it can be used in a car to remind drivers when they are distracted.
 
-![alt text](https://github.com/Edward11235/Resources/blob/master/Distraction_Remained_logo.jpeg)
+Whenever the program detects the user is distracted, a notification sound will pop up to notify the user.

@@ -1,6 +1,9 @@
+import numpy as np
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, \
-    Dense, Activation
+    Dense, Activation, BatchNormalization
+import pandas as pd
+from keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from keras import backend as K
 from keras.preprocessing.image import ImageDataGenerator
 
@@ -12,11 +15,11 @@ SIZE=(WIDTH, HEIGHT)
 IMAGE_CHANNELS=3
 epochs = 2
 batch_size = 12
-train_num = 1418
+train_num = 993
 validate_num = 317
 
-train_data_dir = './data2/train'
-validation_data_dir = './data2/test'
+train_data_dir = './data/train'
+validation_data_dir = './data/test'
 
 # set image shape
 if K.image_data_format() == 'channels_first':
@@ -39,15 +42,30 @@ model.add(Conv2D(64, (3, 3))) # filter increases
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2))) # reduce size to one fourth
 
+model.add(Conv2D(128, (3, 3))) # filter increases
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2))) # reduce size to one fourth
+
 # dense layer
 model.add(Flatten())
 model.add(Dense(64))
 model.add(Activation('relu'))
-model.add(Dropout(0.5))
+model.add(Dense(64))
+model.add(Activation('relu'))
+model.add(Dropout(0.25))
 model.add(Dense(1))
 model.add(Activation('sigmoid'))
 
 model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+
+# training stuff
+earlystop = EarlyStopping(patience=15) # prevent overfitting
+rate_reduce = ReduceLROnPlateau(minotor='val_acc',
+                                patience=2,
+                                verbose=1,
+                                factor=0.5,
+                                min_lr=0.00001)
+callbacks = [earlystop, rate_reduce]
 
 # data augmentation
 train_datagen = ImageDataGenerator(
