@@ -1,3 +1,4 @@
+![alt text](https://github.com/Edward11235/Resources/blob/master/Distraction_Remained_logo.jpeg)
 Distraction Alarmer
 
 This program uses a trained CNN model to detect if the one in front of the camera is distracted. We used roughly 1500 images of focused and distracted eyes to train the deep learning model, and the accuracy we got was about 80%. It's absolutely a wonderful model.
