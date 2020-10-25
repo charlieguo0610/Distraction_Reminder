@@ -201,9 +201,7 @@ class Vision(Communication):
         Return:
         None
         """
-        cap = cv2.VideoCapture(0)  # 捕获摄像头图像
-
-        # 判断视频是否打开
+        cap = cv2.VideoCapture(0)
 
         if cap.isOpened():
             print('Open')
