@@ -1,9 +1,6 @@
-import numpy as np
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, \
-    Dense, Activation, BatchNormalization
-import pandas as pd
-from keras.callbacks import EarlyStopping, ReduceLROnPlateau
+    Dense, Activation
 from keras import backend as K
 from keras.preprocessing.image import ImageDataGenerator
 
@@ -15,11 +12,11 @@ SIZE=(WIDTH, HEIGHT)
 IMAGE_CHANNELS=3
 epochs = 2
 batch_size = 12
-train_num = 196
-validate_num = 58
+train_num = 1418
+validate_num = 317
 
-train_data_dir = './data/train'
-validation_data_dir = './data/test'
+train_data_dir = './data2/train'
+validation_data_dir = './data2/test'
 
 # set image shape
 if K.image_data_format() == 'channels_first':
@@ -30,36 +27,27 @@ else:
 # setting hyperparameters
 model = Sequential()
 
-model.add(Conv2D(32, (3, 3), activation='relu', input_shape=input_shape))
-model.add(BatchNormalization()) # Normalize data to increase efficiency
-# model.add(Activation('relu'))
+model.add(Conv2D(32, (3, 3), input_shape=input_shape))
+model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2))) # reduce size to one fourth
-model.add(Dropout(0.25)) # increase generalizability
 
-model.add(Conv2D(64, (3, 3), activation='relu', input_shape=input_shape)) # filter increases
-model.add(BatchNormalization()) # Normalize data to increase efficiency
-# model.add(Activation('relu'))
+model.add(Conv2D(32, (3, 3)))
+model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2))) # reduce size to one fourth
-model.add(Dropout(0.25)) # increase generalizability
 
+model.add(Conv2D(64, (3, 3))) # filter increases
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2))) # reduce size to one fourth
 
 # dense layer
 model.add(Flatten())
-model.add(Dense(64, activation='relu')) # 512 neurons
-model.add(BatchNormalization())
-model.add(Dropout(0.5)) # generalizability
-model.add(Dense(2, activation='softmax')) # 2 since binary classificaiton
+model.add(Dense(64))
+model.add(Activation('relu'))
+model.add(Dropout(0.5))
+model.add(Dense(1))
+model.add(Activation('sigmoid'))
 
 model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
-
-# training stuff
-earlystop = EarlyStopping(patience=15) # prevent overfitting
-rate_reduce = ReduceLROnPlateau(minotor='val_acc',
-                                patience=2,
-                                verbose=1,
-                                factor=0.5,
-                                min_lr=0.00001)
-callbacks = [earlystop, rate_reduce]
 
 # data augmentation
 train_datagen = ImageDataGenerator(
@@ -97,4 +85,4 @@ model.fit_generator(
 )
 
 # last step
-model.save('distraction_model.hdf5')
+model.save('./distraction_model.hdf5')
